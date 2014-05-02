@@ -7,3 +7,83 @@
 * Introduction
   This project builds upon the [[https://github.com/suub/error-codes][error-codes]] project and provides a
   convenient way to visualize the ocr-errors with web technology
+  
+** Serving the texts with the errors
+   #+begin_src clojure :ns visualizer.server :tangle src/visualizer/server.clj
+     (ns visualizer.server
+       (:use [ring.middleware.resource :only [wrap-resource]]
+             [ring.middleware.file-info :only [wrap-file-info]]
+             [ring.adapter.jetty :as jetty]
+             [compojure.core]
+             [clojure.core.matrix]
+             [error-codes.core])
+       (:require [compojure.route :as route]
+                 [me.raynes.laser :as l]
+                 [clojure.java.io :refer :all])
+       (:gen-class))
+
+   #+end_src 
+
+   #+RESULTS:
+   : nil
+
+   #+begin_src clojure :ns visualizer.server :tangle src/visualizer/server.clj
+     (defroutes handler
+       (GET "/index.html" [] "hi")
+       (route/not-found "not-found"))
+   #+end_src 
+
+   #+RESULTS:
+   : #'visualizer.server/handler
+
+   #+begin_src clojure :ns visualizer.server :tangle src/visualizer/server.clj
+     (def app (-> #'handler
+                  (wrap-resource "public")
+                  (wrap-file-info)))
+   #+end_src 
+
+   #+RESULTS:
+   : #'visualizer.server/app
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   #+begin_src clojure :ns visualizer.server :tangle src/visualizer/server.clj
+   (defn -main [port]
+  (jetty/run-jetty app {:port (Integer. port) :join? false}))
+   #+end_src 
+
+   #+RESULTS:
+   : #'visualizer.server/-main
+
